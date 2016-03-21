@@ -1,61 +1,56 @@
 <!DOCTYPE html>
 <html ng-app="sportsStore">
+
 <head>
     <title>SportsStore</title>
     <script src="lib/angular.js"></script>
     <link href="lib/bootstrap.css" rel="stylesheet" />
     <link href="lib/bootstrap-theme.css" rel="stylesheet" />
-    <script>
-        angular.module("sportsStore", ["customFilters", "cart"]);
-    </script>
-    <script type="text/javascript" src="controllers/sportsStore.js"></script>
-    <script type="text/javascript" src="filters/customFilters.js"></script>
-    <script type="text/javascript" src="controllers/productListControllers.js"></script>
-    <script type="text/javascript" src="components/cart/cart.js"></script>
 </head>
+
 <body ng-controller="sportsStoreCtrl">
     <div class="navbar navbar-inverse">
         <a class="navbar-brand" href="#">SPORTS STORE</a>
         <cart-summary />
     </div>
-
     <div class="alert alert-danger" ng-show="data.error">
         Error ({{data.error.status}}). The product data was not loaded.
         <a href="/app.html" class="alert-link">Click here to try again</a>
     </div>
+    <ng-view />
+    <script type="text/javascript">
+    angular.module("sportsStore", ["customFilters", "cart", "ngRoute"])
+        .config(function($routeProvider) {
+            $routeProvider.when("/checkout", {
+                templateUrl: "/views/checkoutSummary.html"
+            });
 
-    <ng-include src="'views/productList.html'"></ng-include>
+            $routeProvider.when("/products", {
+                templateUrl: "/views/productList.html"
+            });
+
+            $routeProvider.otherwise({
+                templateUrl: "/views/productList.html"
+            });
+
+            $routeProvider.when("/complete", {
+                templateUrl: "/views/thankYou.html"
+            });
+
+            $routeProvider.when("/placeorder", {
+                templateUrl: "/views/placeOrder.html"
+            });
+
+            foo.helloWorld();
+        });
+    </script>
+    <script type="text/javascript" src="controllers/sportsStore.js"></script>
+    <script type="text/javascript" src="filters/customFilters.js"></script>
+    <script type="text/javascript" src="controllers/productListControllers.js"></script>
+    <script type="text/javascript" src="components/cart/cart.js"></script>
+    <script type="text/javascript" src="ngmodules/angular-route.js"></script>
+    <script type="text/javascript" src="controllers/checkoutControllers.js"></script>
+    
 </body>
+
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
