@@ -1,6 +1,9 @@
 angular.module('sportsStore')
-    .constant('dataUrl', 'https://blazing-torch-1781.firebaseio.com/products.json')
-    .controller('sportsStoreCtrl', function($scope, $http, dataUrl) {
+    .constant('dataUrl',
+      'https://blazing-torch-1781.firebaseio.com/products.json')
+    .constant('orderUrl',
+      'https://blazing-torch-1781.firebaseio.com/orders.json')
+    .controller('sportsStoreCtrl', function($scope, $http, $location, dataUrl, orderUrl, cart) {
       $scope.data = {};
 
       $http.get(dataUrl)
@@ -11,6 +14,24 @@ angular.module('sportsStore')
             .error(function(error) {
               $scope.data.error = error;
             });
+
+      $scope.sendOrder = function(shippingDetails) {
+        var order = angular.copy(shippingDetails);
+
+        order.products = cart.getProducts();
+        
+        $http.post(orderUrl, order)
+          .success(function(data) {
+            $scope.data.orderId = data.id;
+            cart.getProducts().length = 0;
+          })
+          .error(function(error) {
+            $scope.data.orderError = error;
+          }).finally(function() {
+            $location.path('/complete');
+          });
+      };
+
       /*
         $scope.data = {"products": [{"category":"Watersports","description":"A boat for one person","name":"Kayak",
           "price":275,"id":"05af70919155f8fc"},
